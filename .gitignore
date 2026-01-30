@@ -1,0 +1,25 @@
+# Python cache files (The "waste" files you see in api/app folders)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environments (Never push these to GitHub)
+venv/
+env/
+.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE settings (VS Code, PyCharm)
+.vscode/
+.idea/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Optional: Output files or logs
+*.log
+verify_output.txt
