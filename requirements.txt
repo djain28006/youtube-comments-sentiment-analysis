@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+tensorflow-cpu
+numpy
+google-api-python-client
+streamlit
+requests
+pandas
