@@ -46,8 +46,11 @@ if analyze_button:
     else:
         with st.spinner("Analyzing comments... This may take a few seconds."):
             try:
+                # ---------------------------------------------------------
+                # UPDATED: Points to your live Render Backend
+                # ---------------------------------------------------------
                 response = requests.post(
-                    "http://127.0.0.1:8000/analyze",
+                    "https://youtube-comments-sentiment-analysis-h2f4.onrender.com/analyze",
                     json={"youtube_url": url}
                 )
                 
