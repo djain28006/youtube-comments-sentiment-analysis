@@ -23,11 +23,20 @@ class YouTubeSentimentPipeline:
         self.youtube = build("youtube", "v3", developerKey="AIzaSyCwzrJzwNzfje1xJZmZmBU2L2O-cHWPHk0")
 
     def _extract_video_id(self, url):
-        match = re.search(r"v=([^&]+)", url)
-        if not match:
-            # Handle potential short URLs or other formats if needed, but basic param is fine for now
-            raise ValueError("Invalid YouTube URL")
-        return match.group(1)
+        # Pattern to catch both standard (v=) and shortened (youtu.be/) formats
+        # It also handles standard, shortened, and embed links
+        patterns = [
+            r'(?:v=|\/)([0-9A-Za-z_-]{11}).*',
+            r'(?:youtu\.be\/)([0-9A-Za-z_-]{11})',
+            r'(?:embed\/)([0-9A-Za-z_-]{11})'
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, url)
+            if match:
+                return match.group(1)
+
+        raise ValueError("Invalid YouTube URL")
 
     def _get_comments(self, video_id, max_comments=20):
         comments = []
