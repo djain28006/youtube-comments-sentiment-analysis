@@ -23,20 +23,27 @@ class YouTubeSentimentPipeline:
         self.youtube = build("youtube", "v3", developerKey="AIzaSyCwzrJzwNzfje1xJZmZmBU2L2O-cHWPHk0")
 
     def _extract_video_id(self, url):
-        # Pattern to catch both standard (v=) and shortened (youtu.be/) formats
-        # It also handles standard, shortened, and embed links
-        patterns = [
-            r'(?:v=|\/)([0-9A-Za-z_-]{11}).*',
-            r'(?:youtu\.be\/)([0-9A-Za-z_-]{11})',
-            r'(?:embed\/)([0-9A-Za-z_-]{11})'
-        ]
+        """
+        Robustly extracts the 11-character video ID from any YouTube URL.
+        """
+        # 1. Try to find 'v=' (Standard URL: youtube.com/watch?v=ID)
+        # We look for 11 chars that are letters, numbers, underscores, or hyphens.
+        match_standard = re.search(r"v=([a-zA-Z0-9_-]{11})", url)
+        if match_standard:
+            return match_standard.group(1)
 
-        for pattern in patterns:
-            match = re.search(pattern, url)
-            if match:
-                return match.group(1)
+        # 2. Try to find 'youtu.be/' (Short URL: youtu.be/ID)
+        match_short = re.search(r"youtu\.be/([a-zA-Z0-9_-]{11})", url)
+        if match_short:
+            return match_short.group(1)
+            
+        # 3. Try to find 'embed/' (Embed URL: youtube.com/embed/ID)
+        match_embed = re.search(r"embed/([a-zA-Z0-9_-]{11})", url)
+        if match_embed:
+            return match_embed.group(1)
 
-        raise ValueError("Invalid YouTube URL")
+        # If none match, the URL is invalid for our purposes
+        raise ValueError("Invalid YouTube URL: Could not find video ID")
 
     def _get_comments(self, video_id, max_comments=20):
         comments = []
